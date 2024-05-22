@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG" packages="io.opentelemetry.instrumentation.log4j.appender.v2_17">
+    <Appenders>
+        <OpenTelemetry name="OpenTelemetryAppender" />
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} trace_id: %X{trace_id} span_id: %X{span_id} trace_flags: %X{trace_flags} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console" />
+        </Root>
+        <Logger name="io.honeydemo" level="info" additivity="false">
+            <AppenderRef ref="OpenTelemetryAppender" />
+            <AppenderRef ref="Console" />
+        </Logger>
+    </Loggers>
+</Configuration>

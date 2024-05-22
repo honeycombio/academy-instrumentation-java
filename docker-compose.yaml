@@ -1,0 +1,61 @@
+services:
+  backend-for-frontend:
+    build:
+      context: services/backend-for-frontend-java
+      dockerfile: Dockerfile
+    image: backend-for-frontend-java:latest
+    ports:
+      - "10115:10114"
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_HEADERS
+      - OTEL_SERVICE_NAME=backend-for-frontend
+
+  meminator:
+    build:
+      context: services/meminator-java
+      dockerfile: Dockerfile
+    image: meminator-java:latest
+    ports:
+      - "10116:10114" # they can't be the same
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_HEADERS
+      - OTEL_SERVICE_NAME=meminator-java
+
+  phrase-picker:
+    build:
+      context: services/phrase-picker-java
+      dockerfile: Dockerfile
+    image: phrase-picker-java:latest
+    ports:
+      - "10117:10114" # the outer ports can't be the same
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_HEADERS
+      - OTEL_SERVICE_NAME=phrase-picker-java
+
+  image-picker:
+    build:
+      context: services/image-picker-java
+      dockerfile: Dockerfile
+    image: image-picker-java:latest
+    ports:
+      - "10118:10114" # the outer ports can't be the same
+    environment:
+      - BUCKET_NAME
+      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_HEADERS
+      - OTEL_SERVICE_NAME=image-picker-java
+
+  web:
+    build:
+      context: services/web
+      dockerfile: Dockerfile
+      args:
+        HONEYCOMB_API_KEY: ${HONEYCOMB_API_KEY}
+    image: web:latest
+    # volumes: # uncomment this for faster development on the frontend
+    #   - ./services/web/dist:/usr/share/nginx/html # Mount directory containing static files -- only do this for development
+    ports:
+      - "8080:80" # Expose port 8080 for Nginx
