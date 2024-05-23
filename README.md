@@ -87,4 +87,8 @@ After making changes to a service, you can tell it to rebuild just that one:
 
 Visit [http://localhost:8080]()
 
+> If you are using **GitPod**, the address may not be localhost. When running, the VSC environment will ask you if you want to expose the ports to public. Select Yes, and you will see the external address and port 8080, to which you can then click the globe icon to show it on a new tab.
+
 Click the "GO" button. Then wait.
+
+> **NOTE** ⚠️ If you run the application for the first time, the result image may not load up properly. In that case, reload the page, and try again a few times.
