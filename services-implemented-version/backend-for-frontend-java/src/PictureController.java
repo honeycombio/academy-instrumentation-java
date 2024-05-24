@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import reactor.core.publisher.Mono;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
-import reactor.core.publisher.Mono;
 
 @RestController
 public class PictureController {
@@ -24,8 +23,6 @@ public class PictureController {
     private final WebClient imageClient;
     private WebClient memeClient;
     private static final Logger logger = LogManager.getLogger("backendForFrontend");
-
-    Logger logger = LogManager.getLogger("PictureController");
 
     @Autowired
     public PictureController(WebClient.Builder webClientBuilder) {
@@ -37,12 +34,9 @@ public class PictureController {
 
     @PostMapping("/createPicture")
     public Mono<Object> createPicture() throws MalformedURLException {
-        // this one will exist...
         Span span = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("create picture").startSpan();
-
         var phraseResult = phraseClient.get().uri("/phrase").retrieve().toEntity(PhraseResult.class);
         var imageResult = imageClient.get().uri("/imageUrl").retrieve().toEntity(ImageResult.class);
-
         var bothResults = Mono.zip(phraseResult, imageResult);
 
         // Set content type header
@@ -62,11 +56,6 @@ public class PictureController {
 
         // Return the image file as a ResponseEntity
         return meme.map(v -> {
-            v.getHeaders().forEach((k, l) -> {
-                span.setAttribute("header" + k, String.join(",", l));
-            });
-
-            logger.info("which span is current? It will get this log");
             span.end();
             return ResponseEntity.ok()
                     .contentType(mediaType)
