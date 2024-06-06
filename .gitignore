@@ -1,7 +1,6 @@
 *.js.map
 bin/
 obj/
-.env
 .vscode
 .mono/
 .DS_Store
