@@ -2,4 +2,4 @@
 
 set -x # print what you run
 
-docker compose down --build -d $*
+docker compose down
