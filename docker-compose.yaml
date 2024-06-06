@@ -54,6 +54,16 @@ services:
       dockerfile: Dockerfile
       args:
         HONEYCOMB_API_KEY: ${HONEYCOMB_API_KEY}
+    depends_on:
+      image-picker:
+        condition: service_started
+      backend-for-frontend:
+        condition: service_started
+      meminator:
+        condition: service_started
+      phrase-picker:
+        condition: service_started
+      
     image: web:latest
     # volumes: # uncomment this for faster development on the frontend
     #   - ./services/web/dist:/usr/share/nginx/html # Mount directory containing static files -- only do this for development

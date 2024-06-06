@@ -32,8 +32,13 @@ async function fetchPicture() {
 
         // Set the image source to the URL
         document.getElementById('picture').src = imgUrl;
+        document.getElementById('message').style = "display:none";
+        document.getElementById('picture').style = "display:block;";
     } catch (error) {
         console.error('Error fetching picture:', error);
+        document.getElementById('message').innerText = "There was an error fetching a picture. Please retry.";
+        document.getElementById('picture').style = "display:none;";
+        document.getElementById('message').style = "display:block;";
     }
 }
 
