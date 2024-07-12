@@ -12,9 +12,9 @@ services:
       - OTEL_SERVICE_NAME=backend-for-frontend
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:10114/actuator/health || exit 1"]
-      interval: 30s
+      interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 24
 
   meminator:
     build:
