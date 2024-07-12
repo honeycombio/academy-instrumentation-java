@@ -5,16 +5,29 @@ services:
       dockerfile: Dockerfile
     image: backend-for-frontend-java:latest
     ports:
-      - "10115:10114"
+      - "10115"
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_HEADERS
       - OTEL_SERVICE_NAME=backend-for-frontend
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:10114/actuator/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:10115/actuator/health || exit 1"]
       interval: 5s
       timeout: 10s
       retries: 24
+
+  image-picker:
+    build:
+      context: services/image-picker-java
+      dockerfile: Dockerfile
+    image: image-picker-java:latest
+    ports:
+      - "10116" # the outer ports can't be the same
+    environment:
+      - BUCKET_NAME
+      - OTEL_EXPORTER_OTLP_ENDPOINT
+      - OTEL_EXPORTER_OTLP_HEADERS
+      - OTEL_SERVICE_NAME=image-picker-java
 
   meminator:
     build:
@@ -22,7 +35,7 @@ services:
       dockerfile: Dockerfile
     image: meminator-java:latest
     ports:
-      - "10116:10114" # they can't be the same
+      - "10117" # they can't be the same
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_HEADERS
@@ -34,24 +47,11 @@ services:
       dockerfile: Dockerfile
     image: phrase-picker-java:latest
     ports:
-      - "10117:10114" # the outer ports can't be the same
+      - "10118" # the outer ports can't be the same
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT
       - OTEL_EXPORTER_OTLP_HEADERS
       - OTEL_SERVICE_NAME=phrase-picker-java
-
-  image-picker:
-    build:
-      context: services/image-picker-java
-      dockerfile: Dockerfile
-    image: image-picker-java:latest
-    ports:
-      - "10118:10114" # the outer ports can't be the same
-    environment:
-      - BUCKET_NAME
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_EXPORTER_OTLP_HEADERS
-      - OTEL_SERVICE_NAME=image-picker-java
 
   web:
     build:
@@ -73,4 +73,4 @@ services:
     # volumes: # uncomment this for faster development on the frontend
     #   - ./services/web/dist:/usr/share/nginx/html # Mount directory containing static files -- only do this for development
     ports:
-      - "8080:80" # Expose port 8080 for Nginx
+      - "10114:10114" # Expose port 10114 for Nginx
