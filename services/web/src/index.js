@@ -13,9 +13,10 @@
 async function fetchPicture() {
     try {
         // Start with the loading image
-        document.getElementById('message').style = "display:none";
         document.getElementById('picture').style = "display:none";
         document.getElementById('loading-meme').style = "display:block";
+        document.getElementById('message').innerText = "Generating meme...";
+        document.getElementById('message').style = "display:block";
 
         const response = await fetch('/backend/createPicture', {
             method: 'POST',
