@@ -7,4 +7,4 @@
 
 docker compose up --build -d $*
 
-echo "Meminator running on port 8080"
+echo "Meminator running on port 10114"

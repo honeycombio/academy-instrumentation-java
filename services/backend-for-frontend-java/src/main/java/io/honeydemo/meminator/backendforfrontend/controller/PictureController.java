@@ -25,9 +25,9 @@ public class PictureController {
 
     @Autowired
     public PictureController(WebClient.Builder webClientBuilder) {
-        this.phraseClient = webClientBuilder.baseUrl("http://phrase-picker:10114").build();
-        this.imageClient = webClientBuilder.baseUrl("http://image-picker:10114").build();
-        this.memeClient = webClientBuilder.baseUrl("http://meminator:10114").build();
+        this.imageClient = webClientBuilder.baseUrl("http://image-picker:10116").build();
+        this.memeClient = webClientBuilder.baseUrl("http://meminator:10117").build();
+        this.phraseClient = webClientBuilder.baseUrl("http://phrase-picker:10118").build();
     }
 
     @PostMapping("/createPicture")
