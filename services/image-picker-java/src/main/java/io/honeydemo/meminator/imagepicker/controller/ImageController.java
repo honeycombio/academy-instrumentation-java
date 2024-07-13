@@ -71,13 +71,6 @@ public class ImageController {
     private static final String bucketName = System.getenv("BUCKET_NAME");
     private static final String imageUrlPrefix = "https://" + bucketName + ".s3.amazonaws.com/";
 
-    @GetMapping("/health")
-    public Map<String, String> healthCheck() {
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "UP");
-        return response;
-    }
-
     @GetMapping("/imageUrl")
     public ImageResult imageUrl() {
         // choose a random image from the list
