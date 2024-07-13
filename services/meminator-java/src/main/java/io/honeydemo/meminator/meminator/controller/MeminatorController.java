@@ -29,13 +29,6 @@ public class MeminatorController {
     private static final int IMAGE_MAX_WIDTH_PX = 1000;
     private static final int IMAGE_MAX_HEIGHT_PX = 1000;
 
-    @GetMapping("/health")
-    public Map<String, String> healthCheck() {
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "UP");
-        return response;
-    }
-
     Logger logger = LogManager.getLogger("MeminatorController");
 
     @PostMapping("/applyPhraseToPicture")

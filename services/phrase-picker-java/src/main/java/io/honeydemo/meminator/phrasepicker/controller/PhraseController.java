@@ -36,13 +36,6 @@ public class PhraseController {
             "who broke the build?",
             "it could be worse");
 
-    @GetMapping("/health")
-    public Map<String, String> healthCheck() {
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "UP");
-        return response;
-    }
-
     @GetMapping("/phrase")
     public PhraseResult hello() {
         // choose a random phrase from the list
