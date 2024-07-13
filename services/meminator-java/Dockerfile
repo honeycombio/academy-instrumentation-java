@@ -27,5 +27,5 @@ WORKDIR /app
 
 COPY --from=build /app/target/meminator-0.0.1-SNAPSHOT.jar ./meminator.jar
 COPY --from=dependencies /app/opentelemetry-javaagent.jar .
-EXPOSE 8080
+EXPOSE 10117
 CMD ["java", "-javaagent:./opentelemetry-javaagent.jar", "-jar", "meminator.jar"]

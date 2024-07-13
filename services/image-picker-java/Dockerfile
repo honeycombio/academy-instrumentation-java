@@ -15,5 +15,5 @@ FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/target/image-picker-0.0.1-SNAPSHOT.jar ./image-picker.jar
 COPY --from=dependencies /app/opentelemetry-javaagent.jar .
-EXPOSE 8080
+EXPOSE 10116
 CMD ["java", "-javaagent:./opentelemetry-javaagent.jar", "-jar", "image-picker.jar"]
