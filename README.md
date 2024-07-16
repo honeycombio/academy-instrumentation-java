@@ -91,3 +91,7 @@ Visit [http://localhost:10114]()
 Click the "GO" button. Then wait.
 
 > **NOTE** ⚠️ If you run the application for the first time, the result image may not load up properly. In that case, reload the page, and try again a few times.
+
+### Stop the app
+
+`./stop`
