@@ -50,12 +50,7 @@ git clone https://github.com/honeycombio/academy-instrumentation-java.git
 
 Install Docker: https://docs.docker.com/get-docker/
 
-Create a `.env` file from the example:
-```bash
-cp example.env .env
-```
-
-And update the `.env` file with your Honeycomb API key:
+Update the `.env` file with your Honeycomb API key:
 ```bash
 HONEYCOMB_API_KEY="your-api-key"
 
