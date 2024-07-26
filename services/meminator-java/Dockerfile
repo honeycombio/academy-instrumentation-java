@@ -1,10 +1,10 @@
 # Stage 1: Download dependencies
 FROM maven:3.9.6-eclipse-temurin-21-jammy AS dependencies
-
+ARG OTEL_JAVA_AGENT_VERSION
 WORKDIR /app
 COPY pom.xml .
 RUN mvn -B dependency:resolve dependency:resolve-plugins
-RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.33.2/opentelemetry-javaagent.jar
+RUN wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v$OTEL_JAVA_AGENT_VERSION/opentelemetry-javaagent.jar
 
 # Stage 2: Build application
 FROM dependencies AS build
