@@ -3,6 +3,8 @@ services:
     build:
       context: services/backend-for-frontend-java
       dockerfile: Dockerfile
+      args:
+        - OTEL_JAVA_AGENT_VERSION
     image: backend-for-frontend-java:latest
     ports:
       - "10115"
@@ -20,6 +22,8 @@ services:
     build:
       context: services/image-picker-java
       dockerfile: Dockerfile
+      args:
+        - OTEL_JAVA_AGENT_VERSION
     image: image-picker-java:latest
     ports:
       - "10116"
@@ -33,6 +37,8 @@ services:
     build:
       context: services/meminator-java
       dockerfile: Dockerfile
+      args:
+        - OTEL_JAVA_AGENT_VERSION
     image: meminator-java:latest
     ports:
       - "10117"
@@ -45,6 +51,8 @@ services:
     build:
       context: services/phrase-picker-java
       dockerfile: Dockerfile
+      args:
+        - OTEL_JAVA_AGENT_VERSION
     image: phrase-picker-java:latest
     ports:
       - "10118"
@@ -58,7 +66,7 @@ services:
       context: services/web
       dockerfile: Dockerfile
       args:
-        HONEYCOMB_API_KEY: ${HONEYCOMB_API_KEY}
+        - HONEYCOMB_API_KEY
     image: web:latest
     # volumes: # uncomment this for faster development on the frontend
     #   - ./services/web/dist:/usr/share/nginx/html # Mount directory containing static files -- only do this for development
