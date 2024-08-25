@@ -34,4 +34,9 @@ else
 
 fi
 
-echo "Meminator running on port 10114 at: $URL"
+# print out where to go in Honeycomb
+./scripts/honeycomb-whoami.sh
+
+echo "############"
+echo "### Meminator running on port 10114 at: $URL"
+echo "############"
