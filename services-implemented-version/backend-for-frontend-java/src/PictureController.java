@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Mono;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.StatusCode;
 
 @RestController
 public class PictureController {
@@ -35,6 +36,8 @@ public class PictureController {
     @PostMapping("/createPicture")
     public Mono<Object> createPicture() throws MalformedURLException {
         Span span = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("create picture").startSpan();
+        span.addEvent("This is a span event! This span has been initiated.");
+
         var phraseResult = phraseClient.get().uri("/phrase").retrieve().toEntity(PhraseResult.class);
         var imageResult = imageClient.get().uri("/imageUrl").retrieve().toEntity(ImageResult.class);
         var bothResults = Mono.zip(phraseResult, imageResult);
@@ -46,10 +49,23 @@ public class PictureController {
         var meme = bothResults.flatMap(v -> {
             String phrase = v.getT1().getBody().getPhrase();
             String imageUrl = v.getT2().getBody().getImageUrl();
-            span.setAttribute("app.phrase", phrase);
-            span.setAttribute("app.imageUrl", imageUrl);
-            logger.info("app.phrase=" + phrase + ", app.imageUrl=" + imageUrl);
-
+            try {
+                span.setAttribute("app.phrase", phrase);
+                span.setAttribute("app.imageUrl", imageUrl);
+                logger.info("app.phrase=" + phrase + ", app.imageUrl=" + imageUrl);
+                // add something that fails here to test the error span status!
+                String text = null; 
+                int length = text.length();
+            }
+            catch (Throwable t) {
+                span.addEvent("This is another span event! After the error has occurred.");
+                span.setStatus(StatusCode.ERROR, "Something bad happened!");
+                throw t;
+            }
+            finally 
+            {
+                span.end();
+            }
             return memeClient.post().uri("/applyPhraseToPicture").bodyValue(new MemeRequest(phrase, imageUrl))
                     .retrieve().toEntity(byte[].class);
         });
