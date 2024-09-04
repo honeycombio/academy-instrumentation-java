@@ -1,27 +1,24 @@
 package io.honeydemo.meminator.meminator.controller;
 
-import java.lang.reflect.Array;
-import java.lang.ProcessBuilder;
-import java.lang.Process;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.UUID;
+
 import javax.imageio.ImageIO;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import io.opentelemetry.api.GlobalOpenTelemetry;
-import io.opentelemetry.api.trace.Span; // INSTRUMENTATION
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MeminatorController {
@@ -31,6 +28,7 @@ public class MeminatorController {
 
     Logger logger = LogManager.getLogger("MeminatorController");
 
+    @SuppressWarnings("deprecation")
     @PostMapping("/applyPhraseToPicture")
     public ResponseEntity<byte[]> meminate(@RequestBody ImageRequest request) {
         File inputFile = null;
@@ -38,12 +36,12 @@ public class MeminatorController {
 
         try {
             String phrase = request.getPhrase();
-            URL url = new URL(request.getImageUrl());
+            URL imageUrl = new URL(request.getImageUrl());
             
-            String filename = new File(url.getPath()).getName();
+            String filename = new File(imageUrl.getPath()).getName();
             String fileExtension = getFileExtension(filename);
             // download the image using URL
-            BufferedImage originalImage = ImageIO.read(url);
+            BufferedImage originalImage = ImageIO.read(imageUrl);
             inputFile = new File("/tmp/" + filename);
             ImageIO.write(originalImage, fileExtension, inputFile);
 
@@ -52,7 +50,7 @@ public class MeminatorController {
             outputFile = new File(outputFilePath);
 
             // run the convert command
-            Span subprocessSpan = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("convert").startSpan();
+          //  Span subprocessSpan = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("convert").startSpan();
             ProcessBuilder pb = new ProcessBuilder(new String[] {
                 "convert", 
                 inputFile.getAbsolutePath(), 
@@ -67,7 +65,7 @@ public class MeminatorController {
                 phrase.toUpperCase(),
                 outputFilePath
             });
-            subprocessSpan.setAttribute("app.subprocess.command", String.join(" ", pb.command()));
+          //  subprocessSpan.setAttribute("app.subprocess.command", String.join(" ", pb.command()));
             pb.inheritIO();
             Process process = pb.start();
 
@@ -88,10 +86,10 @@ public class MeminatorController {
             }
 
             int exitCode = process.waitFor();
-            subprocessSpan.setAttribute("app.subprocess.returncode", exitCode);
-            subprocessSpan.setAttribute("app.subprocess.stdout", output.toString());
-            subprocessSpan.setAttribute("app.subprocess.stderr", error.toString());
-            subprocessSpan.end();
+            // subprocessSpan.setAttribute("app.subprocess.returncode", exitCode);
+            // subprocessSpan.setAttribute("app.subprocess.stdout", output.toString());
+            // subprocessSpan.setAttribute("app.subprocess.stderr", error.toString());
+            // subprocessSpan.end();
 
             // read the output file back into the byte array
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
