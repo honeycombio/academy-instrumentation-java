@@ -36,12 +36,12 @@ public class MeminatorController {
 
         try {
             String phrase = request.getPhrase();
-            URL url = new URL(request.getImageUrl());
+            URL imageUrl = new URL(request.getImageUrl());
             
-            String filename = new File(url.getPath()).getName();
+            String filename = new File(imageUrl.getPath()).getName();
             String fileExtension = getFileExtension(filename);
             // download the image using URL
-            BufferedImage originalImage = ImageIO.read(url);
+            BufferedImage originalImage = ImageIO.read(imageUrl);
             inputFile = new File("/tmp/" + filename);
             ImageIO.write(originalImage, fileExtension, inputFile);
 
