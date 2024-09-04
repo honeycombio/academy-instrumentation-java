@@ -1,27 +1,24 @@
 package io.honeydemo.meminator.meminator.controller;
 
-import java.lang.reflect.Array;
-import java.lang.ProcessBuilder;
-import java.lang.Process;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.UUID;
+
 import javax.imageio.ImageIO;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import io.opentelemetry.api.GlobalOpenTelemetry;
-import io.opentelemetry.api.trace.Span; // INSTRUMENTATION
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MeminatorController {
@@ -31,6 +28,7 @@ public class MeminatorController {
 
     Logger logger = LogManager.getLogger("MeminatorController");
 
+    @SuppressWarnings("deprecation")
     @PostMapping("/applyPhraseToPicture")
     public ResponseEntity<byte[]> meminate(@RequestBody ImageRequest request) {
         File inputFile = null;
