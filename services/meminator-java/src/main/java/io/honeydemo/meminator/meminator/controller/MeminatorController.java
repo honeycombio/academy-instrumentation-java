@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -50,46 +51,7 @@ public class MeminatorController {
             outputFile = new File(outputFilePath);
 
             // run the convert command
-          //  Span subprocessSpan = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("convert").startSpan();
-            ProcessBuilder pb = new ProcessBuilder(new String[] {
-                "convert", 
-                inputFile.getAbsolutePath(), 
-                "-resize", 
-                IMAGE_MAX_WIDTH_PX + "x" + IMAGE_MAX_HEIGHT_PX,
-                "-gravity", "North",
-                "-pointsize", "48",
-                "-fill", "white",
-                "-undercolor", "#00000080",
-                "-font", "Angkor-Regular",
-                "-annotate", "0",
-                phrase.toUpperCase(),
-                outputFilePath
-            });
-          //  subprocessSpan.setAttribute("app.subprocess.command", String.join(" ", pb.command()));
-            pb.inheritIO();
-            Process process = pb.start();
-
-            InputStream stream = process.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder output = new StringBuilder();
-            String line = "";
-            while((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-
-            InputStream errStream = process.getErrorStream();
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(errStream));
-            StringBuilder error = new StringBuilder();
-            String errLine = "";
-            while((errLine = errReader.readLine()) != null) {
-                error.append(errLine).append("\n");
-            }
-
-            int exitCode = process.waitFor();
-            // subprocessSpan.setAttribute("app.subprocess.returncode", exitCode);
-            // subprocessSpan.setAttribute("app.subprocess.stdout", output.toString());
-            // subprocessSpan.setAttribute("app.subprocess.stderr", error.toString());
-            // subprocessSpan.end();
+            runConvertCommand(inputFile, phrase, outputFilePath);
 
             // read the output file back into the byte array
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -162,4 +124,51 @@ public class MeminatorController {
             this.imageUrl = imageUrl;
         }
     }
+
+    private int runConvertCommand(File inputFile, String phrase, String outputFilePath) throws InterruptedException, IOException {
+
+          //  Span subprocessSpan = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("convert").startSpan();
+        ProcessBuilder pb = new ProcessBuilder(new String[] {
+            "convert", 
+            inputFile.getAbsolutePath(), 
+            "-resize", 
+            IMAGE_MAX_WIDTH_PX + "x" + IMAGE_MAX_HEIGHT_PX,
+            "-gravity", "North",
+            "-pointsize", "48",
+            "-fill", "white",
+            "-undercolor", "#00000080",
+            "-font", "Angkor-Regular",
+            "-annotate", "0",
+            phrase.toUpperCase(),
+            outputFilePath
+        });
+      //  subprocessSpan.setAttribute("app.subprocess.command", String.join(" ", pb.command()));
+        pb.inheritIO();
+        Process process = pb.start();
+
+        InputStream stream = process.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        StringBuilder output = new StringBuilder();
+        String line = null;
+        while((line = reader.readLine()) != null) {
+            output.append(line).append("\n");
+        }
+
+        InputStream errStream = process.getErrorStream();
+        BufferedReader errReader = new BufferedReader(new InputStreamReader(errStream));
+        StringBuilder error = new StringBuilder();
+        String errLine = "";
+        while((errLine = errReader.readLine()) != null) {
+            error.append(errLine).append("\n");
+        }
+
+        int exitCode = process.waitFor();
+                    // subprocessSpan.setAttribute("app.subprocess.returncode", exitCode);
+            // subprocessSpan.setAttribute("app.subprocess.stdout", output.toString());
+            // subprocessSpan.setAttribute("app.subprocess.stderr", error.toString());
+            // subprocessSpan.end();
+        return exitCode;
+    }
 }
+
+
