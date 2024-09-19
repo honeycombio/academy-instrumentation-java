@@ -53,7 +53,7 @@ public class MeminatorController {
             outputFile = new File(outputFilePath);
 
             // run the convert command
-           useImagemagick(inputFile, phrase, outputFilePath);
+            runConvertCommand(inputFile, phrase, outputFilePath);
 
             // read the output file back into the byte array
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -127,8 +127,8 @@ public class MeminatorController {
         }
     }
 
-    @WithSpan()
-    private int useImagemagick(File inputFile, String phrase, String outputFilePath) throws InterruptedException, IOException {
+    @WithSpan
+    private int runConvertCommand(File inputFile, String phrase, String outputFilePath) throws InterruptedException, IOException {
 
           //  Span subprocessSpan = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("convert").startSpan();
         ProcessBuilder pb = new ProcessBuilder(new String[] {
