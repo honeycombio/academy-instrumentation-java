@@ -20,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
-
 
 @RestController
 public class MeminatorController {
@@ -127,7 +125,6 @@ public class MeminatorController {
         }
     }
 
-    @WithSpan
     private int runConvertCommand(File inputFile, String phrase, String outputFilePath) throws InterruptedException, IOException {
 
           //  Span subprocessSpan = GlobalOpenTelemetry.getTracer("pictureController").spanBuilder("convert").startSpan();
