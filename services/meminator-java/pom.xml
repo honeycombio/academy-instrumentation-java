@@ -43,10 +43,12 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>		
 		<dependency>
-			<!--INSTRUMENTATION:
-			this is the only dependency you need for your code -->
 			<groupId>io.opentelemetry</groupId>
 			<artifactId>opentelemetry-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.opentelemetry.instrumentation</groupId>
+			<artifactId>opentelemetry-instrumentation-annotations</artifactId>
 		</dependency>
 	</dependencies>
 
