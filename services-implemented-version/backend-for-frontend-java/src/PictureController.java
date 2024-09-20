@@ -50,8 +50,9 @@ public class PictureController {
             String phrase = v.getT1().getBody().getPhrase();
             String imageUrl = v.getT2().getBody().getImageUrl();
             try {
-                span.setAttribute("app.phrase", phrase);
-                span.setAttribute("app.imageUrl", imageUrl);
+                Span currentSpan = Span.current();
+                currentSpan.setAttribute("app.phrase", phrase);
+                currentSpan.setAttribute("app.imageUrl", imageUrl);
                 logger.info("app.phrase=" + phrase + ", app.imageUrl=" + imageUrl);
                 // add something that fails here to test the error span status!
                 String text = null; 
