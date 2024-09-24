@@ -13,7 +13,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import reactor.core.publisher.Mono;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.StatusCode;
 
 @RestController
 public class PictureController {
@@ -35,6 +38,7 @@ public class PictureController {
 
         var phraseResult = phraseClient.get().uri("/phrase").retrieve().toEntity(PhraseResult.class);
         var imageResult = imageClient.get().uri("/imageUrl").retrieve().toEntity(ImageResult.class);
+        Span span = Span.current();
 
         var bothResults = Mono.zip(phraseResult, imageResult);
 
@@ -46,6 +50,14 @@ public class PictureController {
             String phrase = v.getT1().getBody().getPhrase();
             String imageUrl = v.getT2().getBody().getImageUrl();
             logger.info("app.phrase=" + phrase + ", app.imageUrl=" + imageUrl);
+            span.setAttribute("app.imageUrl", imageUrl);
+            span.setAttribute("app.phrase", phrase);
+
+            if (phrase.length() > 10) {
+                span.setStatus(StatusCode.ERROR);
+            } else {
+                span.setStatus(StatusCode.OK);
+            }
 
             return memeClient.post().uri("/applyPhraseToPicture").bodyValue(new MemeRequest(phrase, imageUrl))
                     .retrieve().toEntity(byte[].class);
